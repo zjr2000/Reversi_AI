@@ -49,14 +49,12 @@ class AI(object):
             tempX, tempY = m
             AI.place(self.chessboard_size, chessboard, self.color, tempX, tempY)
             # consider different period
-            if per <= 6:
+            if per <= 7:
                 val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 4)
-            elif 6 < per <= 59:
+            elif 7 < per <= 61:
                 val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 3)
-            elif 59 < per <= 60:
-                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 4)
             else:
-                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 5)
+                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 4)
 
             for i in range(self.chessboard_size):
                 for j in range(self.chessboard_size):
@@ -160,14 +158,14 @@ class AI(object):
         opp_num = my_num = 0
 
         WEIGHTS = np.array([
-            [200, -30, 110, 80, 80, 110, -30, 200],
-            [-30, -70, -40, 10, 10, -40, -70, -30],
-            [110, -40, 20, 20, 20, 20, -40, 110],
-            [80, 10, 20, -30, -30, 20, 10, 80],
-            [80, 10, 20, -30, -30, 20, 10, 80],
-            [110, -40, 20, 20, 20, 20, -40, 110],
-            [-30, -70, -40, 10, 10, -40, -70, -30],
-            [200, -30, 110, 80, 80, 110, -30, 200]
+            [220, -30, 115, 85, 85, 115, -30, 220],
+            [-30, -80, -40, 10, 10, -40, -80, -30],
+            [115, -40, 20, 20, 20, 20, -40, 115],
+            [85, 13, 20, -29, -29, 20, 13, 85],
+            [85, 13, 20, -29, -29, 20, 13, 85],
+            [115, -40, 20, 20, 20, 20, -40, 115],
+            [-30, -80, -40, 10, 10, -40, -80, -30],
+            [220, -30, 115, 85, 85, 115, -30, 220]
         ])
         DIR = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
 
@@ -412,14 +410,14 @@ class AI(object):
                     map_val -= WEIGHTS[i][j]
         value = 0
         state = AI.count(size, board)
-        if state > 60:
-            value = 10 * number
+        if state > 61:
+            value = 200 * number + map_val
         elif 0 < state <= 20:
-            value = 10*number + 20060*corner - 4777*xLocation + 89*mobility + 70*stable + 74*outside + map_val
-        elif 20 < state <= 40:
-            value = 10*number + 20080*corner - 4777*xLocation + 121*mobility + 78*stable + 75*outside + 6*inside + map_val
+            value = 10*number + 20060*corner - 4777*xLocation + 81*mobility + 72*stable + 73*outside + map_val
+        elif 20 < state <= 50:
+            value = 10*number + 20080*corner - 4785*xLocation + 90*mobility + 97*stable + 75*outside + 12*inside + map_val
         else:
-            value = 10*number + 20040*corner - 4777*xLocation + 103*mobility + 78*stable + 74*outside + map_val
+            value = 10*number + 20100*corner - 4775*xLocation + 82*mobility + 96*stable + 74*outside + map_val
 
         return value
 
