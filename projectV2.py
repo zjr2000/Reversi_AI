@@ -49,12 +49,14 @@ class AI(object):
             tempX, tempY = m
             AI.place(self.chessboard_size, chessboard, self.color, tempX, tempY)
             # consider different period
-            if per <= 7:
-                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 4)
-            elif 7 < per <= 61:
+            if per <= 18:
+                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 3)
+            elif 18 < per <= 34:
+                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 2)
+            elif 34 < per <= 58:
                 val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 3)
             else:
-                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 4)
+                val = -AI.alphaBeta(self.chessboard_size, chessboard, -np.Inf, np.Inf, -self.color, 5)
 
             for i in range(self.chessboard_size):
                 for j in range(self.chessboard_size):
@@ -74,7 +76,10 @@ class AI(object):
         for m in candidate_list:
             tempX, tempY = m
             AI.place(size, board, color, tempX, tempY)
-            score.append(AI.evaluate(size, board))
+            temp = AI.evaluate(size, board)
+            if m == (0, 0) or m == (0, size-1) or m == (size-1, 0) or m == (size-1, size-1):
+                temp += 20000
+            score.append(temp)
 
             for i in range(size):
                 for j in range(size):
@@ -158,14 +163,14 @@ class AI(object):
         opp_num = my_num = 0
 
         WEIGHTS = np.array([
-            [220, -30, 115, 85, 85, 115, -30, 220],
-            [-30, -80, -40, 10, 10, -40, -80, -30],
+            [220, -20, 115, 85, 85, 115, -20, 220],
+            [-20, -80, -40, 10, 10, -40, -80, -20],
             [115, -40, 20, 20, 20, 20, -40, 115],
             [85, 13, 20, -29, -29, 20, 13, 85],
             [85, 13, 20, -29, -29, 20, 13, 85],
             [115, -40, 20, 20, 20, 20, -40, 115],
-            [-30, -80, -40, 10, 10, -40, -80, -30],
-            [220, -30, 115, 85, 85, 115, -30, 220]
+            [-20, -80, -40, 10, 10, -40, -80, -20],
+            [220, -20, 115, 85, 85, 115, -20, 220]
         ])
         DIR = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
 
@@ -250,7 +255,7 @@ class AI(object):
             else:
                 corner -= 1
         if board[size - 1][0] != 0:
-            if board[0][size - 1] == AI.myColor:
+            if board[size-1][0] == AI.myColor:
                 corner += 1
             else:
                 corner -= 1
@@ -258,14 +263,14 @@ class AI(object):
         # x location
         if board[0][0] == 0:
             if board[0][1] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[0][1] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[1][0] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[1][0] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[1][1] == AI.myColor:
                 xLocation += 1
@@ -274,14 +279,14 @@ class AI(object):
 
         if board[size - 1][size - 1] == 0:
             if board[size - 1][size - 2] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[size - 1][size - 2] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[size - 2][size - 1] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[size - 2][size - 1] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[size - 2][size - 2] == AI.myColor:
                 xLocation += 1
@@ -290,14 +295,14 @@ class AI(object):
 
         if board[0][size - 1] == 0:
             if board[0][size - 2] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[0][size - 2] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[1][size - 1] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[1][size - 1] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[1][size - 2] == AI.myColor:
                 xLocation += 1
@@ -306,14 +311,14 @@ class AI(object):
 
         if board[size - 1][0] == 0:
             if board[size - 1][1] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[size - 1][1] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[size - 2][0] == AI.myColor:
-                xLocation += 1
+                xLocation += 0.67
             elif board[size - 2][0] == -AI.myColor:
-                xLocation -= 1
+                xLocation -= 0.67
 
             if board[size - 2][1] == AI.myColor:
                 xLocation += 1
@@ -321,6 +326,26 @@ class AI(object):
                 xLocation -= 1
 
         # stable
+        for x in range(0, size):  # No blank at all directions
+            for y in range(0, size):
+                if board[x][y] == 0:
+                    continue
+                isStable = True
+                for d in range(8):
+                    tempX = x
+                    tempY = y
+                    while 0 <= tempX < size and 0 <= tempY < size:
+                        if board[tempX][tempY] == 0:
+                            isStable = False
+                            break
+                        tempX += DIR[d][0]
+                        tempY += DIR[d][1]
+                if isStable:
+                    if board[x][y] == AI.myColor:
+                        stable += 1
+                    else:
+                        stable -= 1
+
         if board[0][0] == AI.myColor:  # corner and the pieces next to it are stable
             i = 1
             while i < size - 1 and board[0][i] == AI.myColor:
@@ -413,11 +438,11 @@ class AI(object):
         if state > 61:
             value = 200 * number + map_val
         elif 0 < state <= 20:
-            value = 10*number + 20060*corner - 4777*xLocation + 81*mobility + 72*stable + 73*outside + map_val
-        elif 20 < state <= 50:
-            value = 10*number + 20080*corner - 4785*xLocation + 90*mobility + 97*stable + 75*outside + 12*inside + map_val
+            value = 10*number + 20890*corner - 7877*xLocation + 89*mobility + 72*stable + 74*outside + map_val
+        elif 20 < state <= 49:
+            value = 10*number + 21350*corner - 7985*xLocation + 150*mobility + 125*stable + 75*outside + 11*inside + map_val
         else:
-            value = 10*number + 20100*corner - 4775*xLocation + 82*mobility + 96*stable + 74*outside + map_val
+            value = 13*number + 20060*corner - 7595*xLocation + 58*mobility + 310*stable + 58*outside + 13*inside + map_val
 
         return value
 
@@ -428,18 +453,18 @@ class AI(object):
         board[x][y] = color
         DIR = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
         for d in range(8):
-            i = x + DIR[d][0]
-            j = y + DIR[d][1]
-            while 0 <= i < size and 0 <= j < size and board[i][j] == -color:
-                i += DIR[d][0]
-                j += DIR[d][1]
-            if 0 <= i < size and 0 <= j < size and board[i][j] == color:
+            tempX = x + DIR[d][0]
+            tempY = y + DIR[d][1]
+            while 0 <= tempX < size and 0 <= tempY < size and board[tempX][tempY] == -color:
+                tempX += DIR[d][0]
+                tempY += DIR[d][1]
+            if 0 <= tempX < size and 0 <= tempY < size and board[tempX][tempY] == color:
                 while True:
-                    i -= DIR[d][0]
-                    j -= DIR[d][1]
-                    if (i, j) == (x, y):
+                    tempX -= DIR[d][0]
+                    tempY -= DIR[d][1]
+                    if (tempX, tempY) == (x, y):
                         break
-                    board[i][j] = color
+                    board[tempX][tempY] = color
 
     @staticmethod
     def alphaBeta(size, board, alpha, beta, color, depth):
@@ -476,30 +501,22 @@ class AI(object):
 
 
 # import datetime
+# cd = [[0,0,-1,-1,-1,-1,0,0],
+# [1,0,-1,-1,-1,-1,0,0],
+# [1,1,-1,-1,-1,-1,0,-1],
+# [1,-1,1,-1,1,-1,-1,1],
+# [1,-1,1,1,-1,-1,1,0],
+# [1,-1,-1,1,1,-1,1,0],
+# [1,-1,-1,-1,-1,1,1,0],
+# [0,-1,-1,-1,-1,-1,1,-1]]
 # cb = np.zeros((8, 8), dtype=np.int)
-# cb[3][4], cb[4][3], cb[3][3], cb[4][4] = COLOR_BLACK, COLOR_BLACK, COLOR_WHITE, COLOR_WHITE
-# ai = AI(8, COLOR_BLACK, 20)
-#
+# for i in range(8):
+#     for j in range(8):
+#         cb[i][j] = cd[i][j]
+# # cb[3][4], cb[4][3], cb[3][3], cb[4][4] = COLOR_BLACK, COLOR_BLACK, COLOR_WHITE, COLOR_WHITE
+# ai = AI(8, 1, 20)
 # print(cb)
-# print()
-#
-#
-#
-# for round in range(4, 64):
-#     start = datetime.datetime.now()
-#     ai.go(cb)
-#     lens = len(ai.candidate_list)
-#     print(ai.candidate_list)
-#     cnt = AI.count(8,cb)
-#     if lens != 0:
-#         tx, ty = ai.candidate_list[lens-1]
-#         AI.place(8, cb, ai.color, tx, ty)
-#     print(cb)
-#
-#     ai.color = -ai.color
-#     AI.myColor = -AI.myColor
-#     end = datetime.datetime.now()
-#     print(cnt, end-start)
-#     print()
+# ai.go(cb)
+# print(ai.candidate_list)
 
 
